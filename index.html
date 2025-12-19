@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video Playground</title>
+  <style>
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:#0b0f19; color:#e8eefc; }
+    header { padding:18px 20px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .wrap { max-width:980px; margin:0 auto; padding:20px; }
+    .card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.10); border-radius:16px; overflow:hidden; }
+    video { width:100%; height:auto; display:block; background:#000; }
+    .meta { padding:14px 16px; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .btns { display:flex; gap:10px; }
+    button {
+      background:#1f6feb; color:white; border:0; padding:10px 12px; border-radius:10px;
+      cursor:pointer; font-weight:600;
+    }
+    button.secondary { background:rgba(255,255,255,0.10); }
+    .note { opacity:0.85; font-size:13px; line-height:1.5; }
+    code { background:rgba(255,255,255,0.10); padding:2px 6px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div style="font-size:18px;font-weight:800;">가상 영상 사이트 (GitHub Pages)</div>
+      <div class="note">페이지 로드 시 자동 재생. 브라우저 정책상 처음엔 <b>음소거(muted)</b>로 시작합니다.</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card">
+      <video id="player" controls autoplay muted playsinline preload="metadata">
+        <!-- 외부 CC0 샘플 영상 (HTTPS) -->
+        <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+        브라우저가 video 태그를 지원하지 않습니다.
+      </video>
+
+      <div class="meta">
+        <div>
+          <div style="font-weight:800;">Now Playing: CC0 Sample</div>
+          <div class="note">
+            영상이 안 나오면, 학교/네트워크에서 외부 미디어가 차단된 경우일 수 있어요.<br/>
+            그때는 영상 파일을 리포지토리에 넣고 <code>src</code>를 로컬 경로로 바꾸면 됩니다.
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="toggleMute">음소거 해제</button>
+          <button class="secondary" id="replay">처음부터</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px" class="note">
+      로컬 영상으로 바꾸기 예시: 리포지토리에 <code>assets/video.mp4</code> 업로드 후<br/>
+      <code>&lt;source src="assets/video.mp4" type="video/mp4"&gt;</code>
+    </div>
+  </main>
+
+  <script>
+    const v = document.getElementById("player");
+    const toggleMute = document.getElementById("toggleMute");
+    const replay = document.getElementById("replay");
+
+    toggleMute.addEventListener("click", () => {
+      v.muted = !v.muted;
+      toggleMute.textContent = v.muted ? "음소거 해제" : "음소거";
+      if (v.paused) v.play().catch(() => {});
+    });
+
+    replay.addEventListener("click", () => {
+      v.currentTime = 0;
+      v.play().catch(() => {});
+    });
+
+    // 자동재생 실패해도 조용히 무시
+    v.play().catch(() => {});
+  </script>
+</body>
+</html>
